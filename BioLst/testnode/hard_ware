@@ -1,0 +1,56 @@
+import paho.mqtt.client as mqtt
+from pymongo import MongoClient
+from datetime import datetime
+
+# MQTT settings
+mqtt_broker = "broker.hivemq.com"  # Replace with your MQTT broker address
+mqtt_port = 1883  # Replace with your MQTT broker port
+mqtt_topic = "ttr"  # Replace with the MQTT topic you want to subscribe to
+
+# MongoDB settings
+mongo_host = "localhost"  # Replace with your MongoDB server address
+mongo_port = 27017  # Replace with your MongoDB server port
+mongo_database = "DataBase"  # Replace with your MongoDB database name
+mongo_collection = "sensors"  # Replace with your MongoDB collection name
+
+# MongoDB connection
+mongo_client = MongoClient(mongo_host, mongo_port)
+db = mongo_client[mongo_database]
+collection = db[mongo_collection]
+
+# MQTT on_connect callback
+def on_connect(client, userdata, flags, rc):
+    print(f"Connected with result code {rc}")
+    client.subscribe(mqtt_topic)
+
+# MQTT on_message callback
+def on_message(client, userdata, msg):
+    payload = msg.payload.decode("utf-8")
+    print(f"Received message: {payload}")
+
+    # Extract variables from the payload (modify as needed)
+    variable1 = payload.split(',')[0].strip()
+    variable2 = payload.split(',')[1].strip()
+
+    # Get the current timestamp
+    timestamp = datetime.now()
+
+    # Insert variables and timestamp into MongoDB
+    document = {
+        "temperature": variable1,
+        "humidity": variable2,
+        "timestamp": timestamp
+    }
+    collection.insert_one(document)
+    print("Variables inserted into MongoDB")
+
+# Create and configure MQTT client
+mqtt_client = mqtt.Client()
+mqtt_client.on_connect = on_connect
+mqtt_client.on_message = on_message
+
+# Connect to MQTT broker
+mqtt_client.connect(mqtt_broker, mqtt_port, 60)
+
+# Start the MQTT loop
+mqtt_client.loop_forever()

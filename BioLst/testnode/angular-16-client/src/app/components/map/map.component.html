@@ -1,0 +1,38 @@
+<!-- map.component.html 
+<h2>Welcome to the Map Page!</h2>
+<google-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+  <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+</google-map>-->
+
+<h1>Location OF Sensors In Google Map</h1>
+  
+    <google-map height="500px"
+            width="900px"
+            [center]="center"
+            [zoom]="zoom"
+            (mapClick)="moveMap($event)"
+            (mapMousemove)="move($event)">
+            <map-marker  [position]="markerPositions" 
+            [options]="markerOptions" 
+            (mapClick)="onMarkerClick()">
+        </map-marker>
+            <map-info-window >
+                <div>
+                  <h3>Marker Information</h3>
+                  <p>This is the marker info window content.</p>
+                </div>
+            </map-info-window>
+            
+    </google-map>
+  
+<div>Latitude: {{display?.lat}}</div>
+<div>Longitude: {{display?.lng}}</div>
+<div class="row justify-content-center mt-5">
+  <div class="col-md-4">
+      <form  (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <button class="btn btn-primary btn-block" type="submit">Go To Sensor Details</button>
+        </div>
+      </form>
+  </div>
+</div>

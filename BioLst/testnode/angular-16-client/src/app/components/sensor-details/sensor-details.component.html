@@ -1,0 +1,73 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Weather Widget</title>
+  <style>
+    /* Add your own styles for the widget */
+    #weather-widget {
+      border: 1px solid #ccc;
+      padding: 20px;
+      max-width: 600px;
+      text-align: center;
+      margin: auto;
+      align-items: center;
+    }
+    #weather-widget p {
+            font-size: 30px;
+            margin: 10px 0; /* Add margin between paragraphs */
+            text-align: center;
+        }
+  </style>
+</head>
+
+<div class="container">
+  <div class="d-flex justify-content-between text-align-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2 class="h2">Current reads</h2>
+  </div>
+  <div id="weather-widget">
+    <h2>Last Update</h2>
+    <p style="font-size: 30px;" [ngStyle]="{'background-color': Sensors[Sensors.length-1].temperature > 30 ? '#ff0000' : '#89CFF0'}" id="location">Temperature : {{Sensors[Sensors.length-1].temperature}}</p>
+    <p style="font-size: 30px;" [ngStyle]="{'background-color': Sensors[Sensors.length-1].humidity > 50 ? '#ff0000' : '#89CFF0'}" id="temperature">Humidity :{{Sensors[Sensors.length-1].humidity}}</p>
+    <p style="font-size: 30px;" id="temperature">Timestamp :{{Sensors[Sensors.length-1].timestamp}}</p>
+  </div>
+  <div class="container">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom">
+      <h2 class="h2">Sensor Reads</h2>
+    </div>
+    <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col" style="width: 5%">No.</th>
+          <th scope="col" style="width: 20%">Temperature</th>
+          <th scope="col"style="width: 20%">Humidity</th>
+          <th scope="col"style="width: 20%">Timestamp</th>
+          <th scope="col"style="width: 20%">Location</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+
+
+         <tr *ngFor="let sensor of  Sensors.slice(-20).reverse();let i = index">
+          <td>{{ i + 1 }}</td>
+          <td [ngStyle]="{'background-color': sensor.temperature > 30 ? '#ff0000' : '#89CFF0'}">
+            {{sensor.temperature}}
+          </td> 
+          <td [ngStyle]="{'background-color': sensor.humidity > 50 ? '#ff0000' : '#89CFF0'}">
+            {{sensor.humidity}}
+          </td>
+          <td>{{ sensor.timestamp}}</td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-primary" routerLink="/map">GO To Map</button>
+          </td>
+          
+         </tr>
+      </tbody>
+    
+    </table>
+  </div>
+</div>
+
+ 
